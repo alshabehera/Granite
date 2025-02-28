@@ -56,3 +56,4 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
 end
 gem "responders"
+gem "shakapacker", "~> 6.6.0"
