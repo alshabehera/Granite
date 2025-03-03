@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 
 ruby "3.2.2"
@@ -52,9 +54,20 @@ group :development do
 
 end
 
-group :test do
+group :development, :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  # For code formatting and linting
+  gem "rubocop", require: false
+  gem "rubocop-rails", require: false
 end
+
+group :development do
+  # previous gems under this group as it was
+
+  # For linting ERB files
+  gem "erb_lint", require: false, git: "https://github.com/Shopify/erb-lint.git", branch: "main"
+end
+
+gem "react-rails", "~> 2.7.1"
 gem "responders"
 gem "shakapacker", "~> 6.6.0"
-gem 'react-rails', "~> 2.7.1"
