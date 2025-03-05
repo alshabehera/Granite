@@ -11,7 +11,7 @@ class TasksController < ApplicationController
   def create
     task = task.new(task_params)
     task.save!
-    render status: :ok, json: { notice: "Task was successfully created" }
+    render_notice("Task was successfully created")
   end
 
   private
