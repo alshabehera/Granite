@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
 
     when ActiveRecord::RecordNotUnique
       render_error(exception.message)
-
+      # active
     when ActiveModel::ValidationError, ActiveRecord::RecordInvalid, ArgumentError
       error_message = exception.message.gsub("Validation failed: ", "")
       render_error(error_message, :unprocessable_entity)
