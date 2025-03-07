@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TasksController < ApplicationController
-  before_action :load_task!, only: %i[show update]
+  before_action :load_task!, except: %i[index create]
   respond_to :html, :xml, :json
 
   def index
@@ -14,7 +14,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    task = task.new(task_params)
+    task = Task.new(task_params)
     task.save!
     render_notice("Task was successfully created")
   end
@@ -22,6 +22,11 @@ class TasksController < ApplicationController
   def update
     @task.update!(task_params)
     render_notice("Task was successfully updated!")
+  end
+
+  def destroy
+    @task.destroy!
+    render_json
   end
 
   private
