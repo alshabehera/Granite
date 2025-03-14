@@ -73,3 +73,5 @@ gem "responders"
 gem "shakapacker", "~> 6.6.0"
 
 gem "pry-byebug"
+
+gem "bcrypt", "~> 3.1.13"
