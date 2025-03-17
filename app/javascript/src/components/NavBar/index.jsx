@@ -5,7 +5,10 @@ import { Link, useLocation } from "react-router-dom";
 
 import GraniteLogo from "./GraniteLogo";
 
+import { getFromLocalStorage } from "../../utils/storage";
+
 const NavBar = () => {
+  const userName = getFromLocalStorage("authUserName");
   const location = useLocation();
 
   return (
@@ -31,6 +34,9 @@ const NavBar = () => {
               to="/dashboard/create"
             >
               Add new task
+            </Link>
+            <Link className="flex items-center gap-x-1 rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-300 focus:shadow">
+              <span className="block">{userName}</span>
             </Link>
           </div>
         </div>
