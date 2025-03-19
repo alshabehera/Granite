@@ -14,7 +14,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    task = Task.new(task_params)
+    task = current_user.created_tasks.new(task_params)
     task.save!
     render_notice("Task was successfully created")
   end
