@@ -7,7 +7,6 @@ class SessionsController < ApplicationController
     unless @user.authenticate(login_params[:password])
       render_error("Incorrect credentials, try again.", :unauthorized)
     end
-    render
   end
 
   def destroy

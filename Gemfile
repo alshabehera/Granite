@@ -84,3 +84,7 @@ gem "bcrypt", "~> 3.1.13"
 gem "simplecov", require: false, group: :test
 
 gem "pundit"
+
+gem "sidekiq", "~> 6.5.12"
+
+gem "redis", "~> 4.8", ">= 4.8.1"

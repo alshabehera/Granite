@@ -3,6 +3,9 @@
 class Task < ApplicationRecord
   MAX_TITLE_LENGTH = 125
   VALID_TITLE_REGEX = /\A.*[a-zA-Z0-9].*\z/i
+  RESTRICTED_ATTRIBUTES = %i[title task_owner_id assigned_user_id]
+  enum :progress, { pending: "pending", completed: "completed" }, default: :pending
+  enum :status, { unstarred: "unstarred", starred: "starred" }, default: :unstarred
   belongs_to :task_owner, foreign_key: "task_owner_id", class_name: "User"
   belongs_to :assigned_user, foreign_key: "assigned_user_id", class_name: "User"
   has_many :comments, dependent: :destroy
@@ -14,9 +17,16 @@ class Task < ApplicationRecord
   validates :slug, uniqueness: true
   validate :slug_not_changed
   before_create :set_slug
-  before_destroy :assign_tasks_to_task_owners
 
   private
+
+    def self.of_status(progress)
+      if progress == :pending
+        pending.in_order_of(:status, %w(starred unstarred)).order("updated_at DESC")
+      else
+        completed.in_order_of(:status, %w(starred unstarred)).order("updated_at DESC")
+      end
+    end
 
     def set_slug
       title_slug = title.parameterize
@@ -37,14 +47,7 @@ class Task < ApplicationRecord
 
     def slug_not_changed
       if will_save_change_to_slug? && self.persisted?
-        errors.add(:slug, "is immutable!")
-      end
-    end
-
-    def assign_tasks_to_task_owners
-      tasks_whose_owner_is_not_current_user = assigned_tasks.where.not(task_owner_id: id)
-      tasks_whose_owner_is_not_current_user.find_each do |task|
-        task.update(assigned_user_id: task.task_owner_id)
+        errors.add(:slug, I18n.t("task.slug.immutable"))
       end
     end
 end
