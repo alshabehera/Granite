@@ -22,10 +22,9 @@ class User < ApplicationRecord
   validates :password_confirmation, presence: true, on: :create
 
   before_save :to_lowercase
-
+  before_destroy :assign_tasks_to_task_owners
   has_secure_password
   has_secure_token :authentication_token
-  before_destroy :assign_tasks_to_task_owners
 
   private
 
