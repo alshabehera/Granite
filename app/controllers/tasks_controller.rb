@@ -19,6 +19,7 @@ class TasksController < ApplicationController
   end
 
   def create
+    puts task_params
     task = current_user.created_tasks.new(task_params)
     authorize task
     task.save!
