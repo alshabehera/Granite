@@ -63,12 +63,12 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_response :ok
   end
 
-  # def test_assignee_shouldnt_destroy_task
-  #   delete task_path(@task.slug), headers: @assignee_headers
-  #   assert_response :forbidden
-  #   response_json = response.parsed_body
-  #   assert_equal I18n.t("authorization.denied"), response_json["error"]
-  # end
+  def test_assignee_shouldnt_destroy_task
+    delete task_path(@task.slug), headers: @assignee_headers
+    assert_response :forbidden
+    response_json = response.parsed_body
+    assert_equal I18n.t("authorization.denied"), response_json["error"]
+  end
 
   def test_assignee_shouldnt_update_restricted_task_fields
     new_title = "#{@task.title}-(updated)"
@@ -105,6 +105,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
 
     get task_path(invalid_slug), headers: @creator_headers
     assert_response :not_found
-    assert_equal I18n.t("task.not_found"), response.parsed_body["error"]
+    response_json = response.parsed_body
+    assert_equal I18n.t("not_found", entity: "Task"), response_json["error"]
   end
 end
