@@ -121,6 +121,17 @@ class TaskTest < ActiveSupport::TestCase
     assert_equal "#{title.parameterize}-#{expected_slug_suffix_for_new_task}", new_task.slug
   end
 
+  def test_existing_slug_prefixed_in_new_task_title_doesnt_break_slug_generation
+    title_having_new_title_as_substring = "buy milk and apple"
+    new_title = "buy milk"
+
+    existing_task = Task.create!(title: title_having_new_title_as_substring, assigned_user: @user, task_owner: @user)
+    assert_equal title_having_new_title_as_substring.parameterize, existing_task.slug
+
+    new_task = Task.create!(title: new_title, assigned_user: @user, task_owner: @user)
+    assert_equal new_title.parameterize, new_task.slug
+  end
+
   def test_having_same_ending_substring_in_title_doesnt_break_slug_generation
     title_having_new_title_as_ending_substring = "Go for grocery shopping and buy apples"
     new_title = "buy apples"
@@ -132,5 +143,23 @@ class TaskTest < ActiveSupport::TestCase
 
     new_task = Task.create!(title: new_title, assigned_user: @user, task_owner: @user)
     assert_equal new_title.parameterize, new_task.slug
+  end
+
+  def test_having_numbered_slug_substring_in_title_doesnt_affect_slug_generation
+    title_with_numbered_substring = "buy 2 apples"
+
+    existing_task = Task.create!(title: title_with_numbered_substring, assigned_user: @user, task_owner: @user)
+    assert_equal title_with_numbered_substring.parameterize, existing_task.slug
+
+    substring_of_existing_slug = "buy"
+    new_task = Task.create!(title: substring_of_existing_slug, assigned_user: @user, task_owner: @user)
+
+    assert_equal substring_of_existing_slug.parameterize, new_task.slug
+  end
+
+  def test_creates_multiple_tasks_with_unique_slug
+    tasks = create_list(:task, 10, assigned_user: @user, task_owner: @user)
+    slugs = tasks.pluck(:slug)
+    assert_equal slugs.uniq, slugs
   end
 end
