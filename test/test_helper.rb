@@ -27,6 +27,13 @@ class ActiveSupport::TestCase
 
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors) unless ENV["COVERAGE"]
-
+  def headers(user, options = {})
+    {
+      Accept: "application/json",
+      "Content_Type" => "application/json",
+      "X-Auth-Token" => user.authentication_token,
+      "X-Auth-Email" => user.email
+    }.merge(options)
+  end
   # Add more helper methods to be used by all tests here...
 end
