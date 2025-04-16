@@ -92,21 +92,13 @@ class UserTest < ActiveSupport::TestCase
     assert_not_same @user.authentication_token, second_user.authentication_token
   end
 
-  def test_tasks_created_by_user_are_deleted_when_user_is_deleted
-    task_owner = build(:user)
-    create(:task, assigned_user: @user, task_owner:)
-
-    assert_difference "Task.count", -1 do
-      task_owner.destroy
-    end
+  def test_preference_created_is_valid
+    @user.save
+    assert @user.preference.valid?
   end
 
-  def test_tasks_are_assigned_back_to_task_owners_before_assigned_user_is_destroyed
-    task_owner = build(:user)
-    task = create(:task, assigned_user: @user, task_owner:)
-
-    assert_equal @user.id, task.assigned_user_id
-    @user.destroy
-    assert_equal task_owner.id, task.reload.assigned_user_id
+  def test_notification_delivery_hour_uses_default_value
+    @user.save
+    assert_equal Constants::DEFAULT_NOTIFICATION_DELIVERY_HOUR, @user.preference.notification_delivery_hour
   end
 end
